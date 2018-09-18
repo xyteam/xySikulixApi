@@ -34,6 +34,8 @@ copy sikulixapi-1.1.3.jar to the xySikulixApi directory (this project)
 For now, please refer to the source code in findImage.js. More features will come.
 
 ```
+$ export DISPLAY=:0
+
 $ ./findImage.js --sikulixApiJar=sikulixapi-1.1.4.jar --imagePath=testImages/gLogo.png --imageSimilarity=0.8
 Picked up _JAVA_OPTIONS: -Xms512m -Xmx512m -Dcom.sun.net.ssl.checkRevocation=false
 nodeJava_org_sikuli_script_Match { h: 96, w: 281, y: 825, x: 616 }
