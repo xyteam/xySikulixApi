@@ -30,7 +30,9 @@ $ java -jar sikulixsetup-1.1.3.jar
 Follow UI instructions to download Silulix API
 copy sikulixapi-1.1.3.jar to the xySikulixApi directory (this project)
 
-#### Running Notes
+#### Usage Notes
+For now, please refer to the source code in findImage.js. More features will come.
+
 ```
 $ ./findImage.js --sikulixApiJar=sikulixapi-1.1.4.jar --imagePath=testImages/gLogo.png --imageSimilarity=0.8
 Picked up _JAVA_OPTIONS: -Xms512m -Xmx512m -Dcom.sun.net.ssl.checkRevocation=false
