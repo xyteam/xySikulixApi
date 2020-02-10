@@ -1,4 +1,4 @@
-"use strict";
+#!/usr/bin/env node
 
 const java = require('java');
 const argv = require('minimist')(process.argv.slice(2));
