@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "download": "node scripts/downloadSikulixApiJar.js"
+    "download": "bin/downloadSikulixApiJar.js"
   },
   "author": "",
   "license": "ISC"

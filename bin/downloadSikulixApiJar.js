@@ -1,4 +1,4 @@
-"use strict";
+#!/usr/bin/env node
 
 process.env.DISPLAY = process.env.DISPLAY || ':1';
 const SikulixApiVer = process.env.SikulixApiVer || '2.0.1';
