@@ -4,7 +4,7 @@
   "description": "",
   "bin": {
     "downloadSikulixApiJar": "./bin/downloadSikulixApiJar.js",
-    "findTargetImage": "./bin/findTargetImage.js",
+    "findTargetImage": "./bin/findTargetImage.js"
   },
   "main": "lib/findTargetImage.js",
   "dependencies": {
