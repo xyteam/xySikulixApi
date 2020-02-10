@@ -1,0 +1,107 @@
+"use strict";
+
+const java = require('java');
+const argv = require('minimist')(process.argv.slice(2));
+const onArea = (argv.onArea != null && argv.onArea != 'undefined') ? argv.onArea : 'onScreen';
+const sampleImagePath = (argv.sampleImagePath != null && argv.sampleImagePath != 'undefined') ? argv.sampleImagePath : 'center';
+const imageSimilarity = (argv.imageSimilarity != null && argv.imageSimilarity != 'undefined') ? argv.imageSimilarity : process.env.imageSimilarity || 0.8;
+const imageWaitTime = (argv.imageWaitTime != null && argv.imageWaitTime != 'undefined') ? argv.imageWaitTime : process.env.imageWaitTime || 1;
+const imageAction = (argv.imageAction != null && argv.imageAction != 'undefined') ? argv.imageAction : 'none';
+const maxSimilarityOrText = (argv.maxSimilarityOrText != null && argv.maxSimilarityOrText != 'undefined') ? argv.maxSimilarityOrText : 1;
+const imageMaxCount = (argv.imageMaxCount != null && argv.imageMaxCount != 'undefined') ? argv.imageMaxCount : 1;
+const SikulixApiVer = process.env.SikulixApiVer || '2.0.1';
+const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
+const sikuliApiLibPath = `${__dirname}/../lib`;
+const sikuliApiJarPath = `${sikuliApiLibPath}/${sikuliApiJar}`
+const notFoundStatus = {status: 'notFound'};
+const helpMessage = `
+    node findTargetImage.js --onArea=onArea --sampleImagePath=sampleImagePath --imageSimilarity=imageSimilarity --maxSimilarityOrText=maxSimilarityOrText --imageWaitTime=imageWaitTime --targetImageAction=targetImageAction --targetImageMaxCount=targetImageMaxCount
+`;
+const findTargetImage = (onArea, sampleImagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount) => {
+  const myImageSimilarity = parseFloat(imageSimilarity);
+  const myImageWaitTime = parseFloat(imageWaitTime);
+  const myImageText = isNaN(maxSimilarityOrText) ? maxSimilarityOrText : '';
+  const mySimilarityMax = (myImageText.length > 0) ? 1 : parseFloat(maxSimilarityOrText);
+  const myImageMaxCount = imageMaxCount || 1;
+  // Sikuli Property
+  java.classpath.push(sikuliApiJarPath);
+  // const App = java.import('org.sikuli.script.App');
+  // const Region = java.import('org.sikuli.script.Region');
+  const Screen = java.import('org.sikuli.script.Screen');
+  const Pattern = java.import('org.sikuli.script.Pattern');
+
+  var returnArray = [];
+  var findRegion;
+  var oneTarget;
+
+  switch (onArea) {
+    case 'onFocused':
+      findRegion = App.focusedWindowSync();
+      break;
+    case 'onScreen':
+    default:
+      findRegion = new Screen();
+  }
+  findRegion.setAutoWaitTimeout(myImageWaitTime);
+
+  if (sampleImagePath == 'center') {
+    oneTarget = findRegion.getCenterSync();
+  } else {
+    oneTarget = (new Pattern(sampleImagePath)).similarSync(java.newFloat(myImageSimilarity));
+  }
+
+  try {
+    var find_results = findRegion.findAllSync(oneTarget);
+    var find_item;
+    var matchCount = 0;
+    while (matchCount < myImageMaxCount && find_results.hasNextSync()) {
+      find_item = find_results.nextSync();
+      var returnItem = {location: null, dimension: null, center: null, clicked: null, text: null};
+      returnItem.score = Math.floor(find_item.getScoreSync()*1000000)/1000000;
+      returnItem.text = find_item.textSync();
+      if (returnItem.score >= imageSimilarity && returnItem.score <= mySimilarityMax && returnItem.text.includes(myImageText)) {
+        matchCount += 1;
+        find_item.highlight(0.1);
+        returnItem.location = {x: find_item.x, y: find_item.y};
+        returnItem.dimension = {width: find_item.w, height: find_item.h};
+        returnItem.center = {x: find_item.x + Math.round(find_item.w / 2), y: find_item.y + Math.round(find_item.h / 2)};
+        returnArray.push(returnItem);
+      }
+    }
+    if (returnArray.length == 0) returnArray.push(notFoundStatus);
+    // process imageAction if any
+    var click_count = 0;
+    switch (imageAction) {
+      case 'single':
+        click_count = find_item.hoverSync();
+        click_count = find_item.clickSync();
+      break;
+      case 'double':
+        click_count = find_item.hoverSync();
+        click_count = find_item.doubleClickSync();
+      break;
+      case 'right':
+        click_count = find_item.hoverSync();
+        click_count = find_item.rightClickSync();
+      break;
+      case 'hover':
+        click_count = find_item.hoverSync();
+      break;
+    }
+    if (click_count > 0) {
+      var clicked_target = find_item.getTargetSync();
+      returnItem.clicked = {x: clicked_target.x, y: clicked_target.y}
+    }
+    return JSON.stringify(returnArray);
+  } catch(e) {
+    returnArray.push(notFoundStatus);
+    return JSON.stringify(returnArray);
+  }
+};
+
+if (process.argv.length <= 2 || argv.help != null) {
+    console.log(helpMessage);
+} else {
+    const findTargetImage_result = findTargetImage(onArea, sampleImagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount);
+    console.log(findTargetImage_result);
+}

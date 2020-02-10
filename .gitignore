@@ -1,2 +1,6 @@
+# files to ignore
 *.jar
-testImages/
+package-lock.json
+
+# dirs to ignore
+node_modules/

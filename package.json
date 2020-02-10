@@ -1,15 +1,16 @@
 {
-  "name": "xysikulixapi",
+  "name": "xySikulixApi",
   "version": "1.0.0",
   "description": "",
-  "main": "findImage.js",
+  "main": "lib/findTargetImage.js",
   "dependencies": {
-    "java": "^0.11.0",
-    "minimist": "^1.2.0"
+    "java": "^0.12.1",
+    "minimist": "^1.2.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "download": "node scripts/downloadSikulixApiJar.js"
   },
   "author": "",
   "license": "ISC"
