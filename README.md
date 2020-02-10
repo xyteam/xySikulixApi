@@ -14,7 +14,7 @@ This project contains node js code that can make Sikulx API functionality availa
 ```
 npm install
 npm run download                       # which will download sikulixapi-2.0.1.jar
-SikulixApiVer=2.0.2 npm run download   # which will download sikulixapi-2.0.1.jar
+SikulixApiVer=2.0.2 npm run download   # which will download sikulixapi-2.0.2.jar
 ```
 
 #### test out
