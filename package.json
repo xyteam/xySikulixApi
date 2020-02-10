@@ -2,6 +2,10 @@
   "name": "xySikulixApi",
   "version": "1.0.0",
   "description": "",
+  "bin": {
+    "downloadSikulixApiJar": "./bin/downloadSikulixApiJar.js",
+    "findTargetImage": "./bin/findTargetImage.js",
+  },
   "main": "lib/findTargetImage.js",
   "dependencies": {
     "java": "^0.12.1",
