@@ -11,39 +11,18 @@ This project is licensed under the terms of the MIT license.
 This project contains node js code that can make Sikulx API functionality available in Node JS coding environment as well as in Linux system commands.
 
 #### Installation Notes
-Ubuntu 18.04 and on can use sikulixapi-1.1.4.jar. Older Ubuntu releases can only use sikulixapi-1.1.3.jar.
-###### xyPlatform lubuntu VMs:
 ```
-$ npm install
+npm install
+npm run download                       # which will download sikulixapi-2.0.1.jar
+SikulixApiVer=2.0.2 npm run download   # which will download sikulixapi-2.0.1.jar
 ```
-###### For lubuntu1804 (ubuntu 18.04):
-```
-$ ./downloadLatestSikulixApiJar.js --sikulixApiJar=sikulixapi-1.1.4.jar --sikulixUrl=https://raiman.github.io/SikuliX1/sikulixapi.jar
-```
-###### For lubuntu1604 (ubuntu 16.04):
-You need to manually acquire sikulixapi-1.1.3.jar and copy to the current directory.
-```
-$ cd ~/Downloads
-$ wget https://launchpad.net/sikuli/sikulix/1.1.3/+download/sikulixsetup-1.1.3.jar
-$ java -jar sikulixsetup-1.1.3.jar
-```
-Follow UI instructions to download Silulix API
-copy sikulixapi-1.1.3.jar to the xySikulixApi directory (this project)
 
-#### Usage Notes
-For now, please refer to the source code in findImage.js. More features will come.
-
+#### test out
 ```
-$ export DISPLAY=:0
-
-$ ./findImage.js --sikulixApiJar=sikulixapi-1.1.4.jar --imagePath=testImages/gLogo.png --imageSimilarity=0.8
-Picked up _JAVA_OPTIONS: -Xms512m -Xmx512m -Dcom.sun.net.ssl.checkRevocation=false
-nodeJava_org_sikuli_script_Match { h: 96, w: 281, y: 825, x: 616 }
-
-$ ./findImage.js --sikulixApiJar=sikulixapi-1.1.4.jar --imagePath=testImages/gLogo.png --imageSimilarity=0.8 --imageFindAll
-Picked up _JAVA_OPTIONS: -Xms512m -Xmx512m -Dcom.sun.net.ssl.checkRevocation=false
-nodeJava_org_sikuli_script_Match { h: 96, w: 281, y: 825, x: 616 }
-nodeJava_org_sikuli_script_Match { h: 96, w: 281, y: 305, x: 361 }
-nodeJava_org_sikuli_script_Match { h: 96, w: 281, y: 426, x: 1324 }
-
+google-chrome test_images/targetImage.png &
+node scripts/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Seen'
 ```
+
+#### development note
+Base functions are available in command-line form.
+API No modules have been exported yet. This will come soon.
