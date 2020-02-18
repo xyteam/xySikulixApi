@@ -14,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "download": "bin/downloadSikulixApiJar.js"
+    "postinstall": "bin/downloadSikulixApiJar.js"
   },
   "author": "",
   "license": "ISC"
