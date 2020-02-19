@@ -6,7 +6,7 @@
     "downloadSikulixApiJar": "./bin/downloadSikulixApiJar.js",
     "findTargetImage": "./bin/findTargetImage.js"
   },
-  "main": "lib/findTargetImage.js",
+  "main": "lib/lib/xysikulixapi.js",
   "dependencies": {
     "java": "^0.12.1",
     "minimist": "^1.2.0",
@@ -16,6 +16,6 @@
   "scripts": {
     "postinstall": "bin/downloadSikulixApiJar.js"
   },
-  "author": "",
+  "author": "xywang68@gmail.com",
   "license": "ISC"
 }
