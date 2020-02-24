@@ -3,7 +3,6 @@
   "version": "0.0.2",
   "description": "",
   "bin": {
-    "downloadSikulixApiJar": "./bin/downloadSikulixApiJar.js",
     "findTargetImage": "./bin/findTargetImage.js"
   },
   "main": "lib/xysikulixapi.js",
