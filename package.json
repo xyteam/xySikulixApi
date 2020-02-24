@@ -1,12 +1,12 @@
 {
   "name": "xysikulixapi",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "bin": {
     "downloadSikulixApiJar": "./bin/downloadSikulixApiJar.js",
     "findTargetImage": "./bin/findTargetImage.js"
   },
-  "main": "lib/lib/xysikulixapi.js",
+  "main": "lib/xysikulixapi.js",
   "dependencies": {
     "java": "^0.12.1",
     "minimist": "^1.2.0",
