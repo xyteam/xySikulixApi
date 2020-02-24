@@ -21,7 +21,7 @@ const notFoundStatus = {status: 'notFound'};
 // const screen_session = require(process.env.FrameworkPath + '/framework/libs/screen_session');
 
 const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount) => {
-  const myImageSimilarity = parseFloat(imageSimilarity);
+  const myImageSimilarity = parseFloat(imageSimilarity) - 0.0000001;
   const myImageWaitTime = parseFloat(imageWaitTime);
   const myImageText = isNaN(maxSimilarityOrText) ? maxSimilarityOrText : '';
   const mySimilarityMax = (myImageText.length > 0) ? 1 : parseFloat(maxSimilarityOrText);
