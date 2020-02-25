@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "description": "",
   "bin": {
-    "findTargetImage": "./bin/findTargetImage.js"
+    "findTargetImage": "bin/findTargetImage.js"
   },
   "main": "lib/xysikulixapi.js",
   "dependencies": {
@@ -13,7 +13,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "postinstall": "bin/downloadSikulixApiJar.js"
+    "postinstall": "bin/downloadSikulixApiJar.js",
+    "test-positive" : "bin/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Seen'",
+    "test-negative" : "bin/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Fake'",
+    "test" : "npm run test-positive && npm run test-negative"
   },
   "author": "xywang68@gmail.com",
   "license": "ISC"

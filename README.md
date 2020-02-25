@@ -12,17 +12,49 @@ This project contains node js code that can make Sikulx API functionality availa
 
 #### Installation Notes
 ```
-npm install
-npm run download                       # which will download sikulixapi-2.0.1.jar
-SikulixApiVer=2.0.2 npm run download   # which will download sikulixapi-2.0.2.jar
+npm install                            # which will download sikulixapi-2.0.1.jar
+SikulixApiVer=2.0.2 npm install        # which will download sikulixapi-2.0.2.jar
 ```
 
 #### test out
 ```
 google-chrome test_images/targetImage.png &
-node scripts/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Seen'
+npm test
+
+or
+npm run test-positive
+npm run test-negative
 ```
 
 #### development note
-Base functions are available in command-line form.
-API No modules have been exported yet. This will come soon.
+```
+#!/usr/bin/env node
+
+const java = require('java');
+const xysikulixapi = require('xysikulixapi');
+
+// Sikuli Property
+const App = xysikulixapi.App;
+const Region = xysikulixapi.Region;
+const Screen = xysikulixapi.Screen;
+const Pattern = xysikulixapi.Pattern;
+
+// Prepare
+var mySampleImagePath = '/full/Path/To/ImageFile'; // define a sample image
+var mySimilarity = 0.95; // define similarity as 95%
+var myScreen = new Screen(); // get screen 0 (default as 0)
+var myScreenRegion = new Region(myScreen.getBoundsSync()); // define a new region from myScreen
+var myPattern = (new Pattern(mySampleImagePath)).similarSync(java.newFloat(mySimilarity)); // define a Pattern that is 95% similar to the sample image
+
+// Actions
+const oneTarget = myScreenRegion.findSync(myPattern); // find one target
+oneTarget.highlight(0.1); // flash a highlight on the target
+let targetText oneTarget.textSync(); // retrive text from target
+console.log(targetText); // print
+const allTargets = myScreenRegion.findAllSync(myPattern); // find all targets 
+while (allTargets.hasnextSync()) {
+   let oneTarget = allTargets.nextSync();
+   ...
+}
+...
+```
