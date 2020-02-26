@@ -62,4 +62,4 @@ while (allTargets.hasnextSync()) {                         // loop through all t
 ```
 
 #### example
-Here is [a working example](./bin/findTargetImages.js)
+Here is [a working example](./bin/findTargetImage.js)
