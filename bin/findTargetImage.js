@@ -87,28 +87,30 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimOrText, imageWaitTi
       returnArray.push(notFoundStatus)
      } else {
       // process imageAction if any
-      for (i=0; i<returnArray.length; i++) {
-        var clickRegion = new Region(returnArray[i].location.x, returnArray[i].location.y, returnArray[i].dimension.width, returnArray[i].dimension.height);
-        switch (imageAction) {
-          case 'single':
-            clickRegion.hoverSync();
-            clickRegion.clickSync();
-            returnArray[i].clicked = returnArray[i].center;
-          break;
-          case 'double':
-            clickRegion.hoverSync();
-            clickRegion.doubleClickSync();
-            returnArray[i].clicked = returnArray[i].center;
-          break;
-          case 'right':
-            clickRegion.hoverSync();
-            clickRegion.rightClickSync();
-            returnArray[i].clicked = returnArray[i].center;
-          break;
-          case 'hover':
-            clickRegion.hoverSync();
-          break;
-        }
+      if (iimageAction && imageAction != 'none' && imageAction != 'null') {
+        for (i=0; i<returnArray.length; i++) {
+          var clickRegion = new Region(returnArray[i].location.x, returnArray[i].location.y, returnArray[i].dimension.width, returnArray[i].dimension.height);
+          switch (imageAction) {
+            case 'single':
+              clickRegion.hoverSync();
+              clickRegion.clickSync();
+              returnArray[i].clicked = returnArray[i].center;
+            break;
+            case 'double':
+              clickRegion.hoverSync();
+              clickRegion.doubleClickSync();
+              returnArray[i].clicked = returnArray[i].center;
+            break;
+            case 'right':
+              clickRegion.hoverSync();
+              clickRegion.rightClickSync();
+              returnArray[i].clicked = returnArray[i].center;
+            break;
+            case 'hover':
+              clickRegion.hoverSync();
+            break;
+          }
+        }  
       }
     }
   } catch(e) {
