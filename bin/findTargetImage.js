@@ -18,10 +18,9 @@ const imageAction = (argv.imageAction != null && argv.imageAction != 'undefined'
 const maxSimilarityOrText = (argv.maxSimilarityOrText != null && argv.maxSimilarityOrText != 'undefined') ? argv.maxSimilarityOrText : 1;
 const imageMaxCount = (argv.imageMaxCount != null && argv.imageMaxCount != 'undefined') ? argv.imageMaxCount : 1;
 const notFoundStatus = {status: 'notFound'};
-// const screen_session = require(process.env.FrameworkPath + '/framework/libs/screen_session');
 
 const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount) => {
-  const myImageSimilarity = parseFloat(imageSimilarity) - 0.0000001;
+  const myImageSimilarity = parseFloat(imageSimilarity);
   const myImageWaitTime = parseFloat(imageWaitTime);
   const myImageText = isNaN(maxSimilarityOrText) ? maxSimilarityOrText : '';
   const mySimilarityMax = (myImageText.length > 0) ? 1 : parseFloat(maxSimilarityOrText);
@@ -30,7 +29,7 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
   var findRegion;
   switch (onArea) {
     case 'onFocused':
-      findRegion = App.focusedWindowSync();
+      findRegion = new App.focusedWindowSync();
       break;
     case 'onScreen':
     default:
@@ -53,7 +52,7 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
       case 'screen':
         find_item = Region(findRegion.getBoundsSync());
         find_item.highlight(0.1);
-        returnItem.text = find_item.textSync();    
+        returnItem.text = find_item.textSync().split('\n');
         [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(find_item);
         returnArray.push(returnItem);
         break;
@@ -61,7 +60,7 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
       case 'console':
         find_item = Region(findRegion.getBoundsSync()).growSync(-100);
         find_item.highlight(0.1);
-        returnItem.text = find_item.textSync();    
+        returnItem.text = find_item.textSync().split('\n');
         [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(find_item);
         returnArray.push(returnItem);
         break;
@@ -72,9 +71,9 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
         while (matchCount < myImageMaxCount && find_results.hasNextSync()) {
           find_item = find_results.nextSync();
           returnItem.score = Math.floor(find_item.getScoreSync()*1000000)/1000000;
-          returnItem.text = find_item.textSync();    
+          returnItem.text = find_item.textSync().split('\n');
           [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(find_item);
-          if (returnItem.score >= myImageSimilarity && returnItem.score <= mySimilarityMax && returnItem.text.includes(myImageText)) {
+          if (returnItem.score >= myImageSimilarity && returnItem.score <= mySimilarityMax && returnItem.text.join('\n').includes(myImageText)) {
             matchCount += 1;
             find_item.highlight(0.1);
             returnArray.push(returnItem);
@@ -118,3 +117,4 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
 };
 const findImage_result = findImage(onArea, imagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount);
 console.log(`fidnImage_result: ${findImage_result}`);
+
