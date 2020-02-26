@@ -11,19 +11,19 @@ const Pattern = xysikulixapi.Pattern;
 
 const argv = require('minimist')(process.argv.slice(2));
 const onArea = (argv.onArea != null && argv.onArea != 'undefined') ? argv.onArea : 'onScreen';
-const imagePath = (argv.imagePath != null && argv.imagePath != 'undefined') ? argv.imagePath : 'center';
+const imagePath = (argv.imagePath != null && argv.imagePath != 'undefined') ? argv.imagePath : 'console';
 const imageSimilarity = (argv.imageSimilarity != null && argv.imageSimilarity != 'undefined') ? argv.imageSimilarity : process.env.imageSimilarity || 0.8;
 const imageWaitTime = (argv.imageWaitTime != null && argv.imageWaitTime != 'undefined') ? argv.imageWaitTime : process.env.imageWaitTime || 1;
 const imageAction = (argv.imageAction != null && argv.imageAction != 'undefined') ? argv.imageAction : 'none';
-const maxSimilarityOrText = (argv.maxSimilarityOrText != null && argv.maxSimilarityOrText != 'undefined') ? argv.maxSimilarityOrText : 1;
+const maxSimOrText = (argv.maxSimOrText != null && argv.maxSimOrText != 'undefined') ? argv.maxSimOrText : 1;
 const imageMaxCount = (argv.imageMaxCount != null && argv.imageMaxCount != 'undefined') ? argv.imageMaxCount : 1;
 const notFoundStatus = {status: 'notFound'};
 
-const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount) => {
+const findImage = (onArea, imagePath, imageSimilarity, maxSimOrText, imageWaitTime, imageAction, imageMaxCount) => {
   const myImageSimilarity = parseFloat(imageSimilarity);
   const myImageWaitTime = parseFloat(imageWaitTime);
-  const myImageText = isNaN(maxSimilarityOrText) ? maxSimilarityOrText : '';
-  const mySimilarityMax = (myImageText.length > 0) ? 1 : parseFloat(maxSimilarityOrText);
+  const myImageText = isNaN(maxSimOrText) ? maxSimOrText : '';
+  const mySimilarityMax = (myImageText.length > 0) ? 1 : parseFloat(maxSimOrText);
   const myImageMaxCount = imageMaxCount || 1;
 
   var findRegion;
@@ -115,6 +115,6 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimilarityOrText, imag
   }
   return JSON.stringify(returnArray);
 };
-const findImage_result = findImage(onArea, imagePath, imageSimilarity, maxSimilarityOrText, imageWaitTime, imageAction, imageMaxCount);
+const findImage_result = findImage(onArea, imagePath, imageSimilarity, maxSimOrText, imageWaitTime, imageAction, imageMaxCount);
 console.log(`fidnImage_result: ${findImage_result}`);
 

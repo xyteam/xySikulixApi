@@ -14,8 +14,8 @@
   "devDependencies": {},
   "scripts": {
     "postinstall": "bin/downloadSikulixApiJar.js",
-    "test-positive" : "bin/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Seen'",
-    "test-negative" : "bin/findTargetImage.js --onArea=onScreen --sampleImagePath=`pwd`/test_images/sampleImage.png --maxSimilarityOrText='Fake'",
+    "test-positive" : "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --maxSimOrText='Seen'",
+    "test-negative" : "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --maxSimOrText='Fake'",
     "test" : "npm run test-positive && npm run test-negative"
   },
   "author": "xywang68@gmail.com",
