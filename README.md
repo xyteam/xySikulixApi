@@ -29,6 +29,7 @@ npm run test-negative
 #### development note
 ```
 #!/usr/bin/env node
+// above: since JVM is a heavy process it is advised to run a separate node process for it.
 
 const java = require('java');
 const xysikulixapi = require('xysikulixapi');
@@ -40,21 +41,25 @@ const Screen = xysikulixapi.Screen;
 const Pattern = xysikulixapi.Pattern;
 
 // Prepare
-var mySampleImagePath = '/full/Path/To/ImageFile'; // define a sample image
-var mySimilarity = 0.95; // define similarity as 95%
-var myScreen = new Screen(); // get screen 0 (default as 0)
+var mySampleImagePath = '/full/Path/To/ImageFile';         // define a sample image
+var mySimilarity = 0.95;                                   // define similarity as 95%
+var myScreen = new Screen();                               // get screen 0 (default as 0)
 var myScreenRegion = new Region(myScreen.getBoundsSync()); // define a new region from myScreen
 var myPattern = (new Pattern(mySampleImagePath)).similarSync(java.newFloat(mySimilarity)); // define a Pattern that is 95% similar to the sample image
 
 // Actions
-const oneTarget = myScreenRegion.findSync(myPattern); // find one target
-oneTarget.highlight(0.1); // flash a highlight on the target
-let targetText oneTarget.textSync(); // retrive text from target
-console.log(targetText); // print
-const allTargets = myScreenRegion.findAllSync(myPattern); // find all targets 
-while (allTargets.hasnextSync()) {
-   let oneTarget = allTargets.nextSync();
+const oneTarget = myScreenRegion.findSync(myPattern);      // find one target
+oneTarget.highlight(0.1);                                  // flash a highlight on the target
+let targetText oneTarget.textSync();                       // retrive text from target
+console.log(targetText);                                   // print retrived text
+
+const allTargets = myScreenRegion.findAllSync(myPattern);  // find all targets 
+while (allTargets.hasnextSync()) {                         // loop through all targets
+   let oneTarget = allTargets.nextSync();                  // process each target
    ...
 }
 ...
+
+#### example
+Here is [a working example](./bin/findTargetImages.js)
 ```
