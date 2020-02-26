@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const java = require('java');
+java.options.push('-Xmx1024m');
 const xysikulixapi = require('../lib/xysikulixapi');
 
 // Sikuli Property
