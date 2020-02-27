@@ -87,7 +87,7 @@ const findImage = (onArea, imagePath, imageSimilarity, maxSimOrText, imageWaitTi
       returnArray.push(notFoundStatus)
      } else {
       // process imageAction if any
-      if (iimageAction && imageAction != 'none' && imageAction != 'null') {
+      if (imageAction && imageAction != 'none' && imageAction != 'null') {
         for (i=0; i<returnArray.length; i++) {
           var clickRegion = new Region(returnArray[i].location.x, returnArray[i].location.y, returnArray[i].dimension.width, returnArray[i].dimension.height);
           switch (imageAction) {
