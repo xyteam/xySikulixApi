@@ -53,7 +53,7 @@ var myPattern = (new Pattern(mySampleImagePath)).similarSync(java.newFloat(mySim
 // Single target and actions
 const oneTarget = myScreenRegion.findSync(myPattern);      // find one target
 oneTarget.highlight(0.1);                                  // flash a highlight on the target
-let targetText oneTarget.textSync();                       // retrive text from target
+let targetText = oneTarget.textSync();                     // retrive text from target
 console.log(targetText);                                   // print retrived text
 
 // All targets and actions
