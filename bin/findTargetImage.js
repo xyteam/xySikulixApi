@@ -3,7 +3,7 @@
 // Tesseract-OCR Property
 process.env.LC_ALL = 'C';
 process.env.LC_CTYPE = 'C';
-process.env.TESSDATA_PREFIX = '/usr/share/tesseract-ocr/4.00/tessdata';
+process.env.TESSDATA_PREFIX = '/usr/share/tesseract-ocr/4.00/';
 
 const java = require('java');
 const xysikulixapi = require('../lib/xysikulixapi');
