@@ -1,6 +1,6 @@
 {
   "name": "xysikulixapi",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "bin": {
     "findTargetImage": "bin/findTargetImage.js"
@@ -14,7 +14,7 @@
   "devDependencies": {},
   "scripts": {
     "postinstall": "bin/downloadSikulixApiJar.js",
-    "download" : "bin/downloadSikulixApiJar.js",
+    "download": "bin/downloadSikulixApiJar.js",
     "test-positive": "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --maxSimOrText='Seen'",
     "test-negative": "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --maxSimOrText='Fake'",
     "test": "npm run test-positive && npm run test-negative"
