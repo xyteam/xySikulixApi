@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 process.env.DISPLAY = process.env.DISPLAY || ':1';
-const SikulixApiVer = process.env.SikulixApiVer || '2.0.3';
+const SikulixApiVer = process.env.SikulixApiVer || '2.0.4';
 const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
 const sikuliApiLibPath = `${__dirname}/../lib`;
 const sikuliApiJarPath = `${sikuliApiLibPath}/${sikuliApiJar}`
