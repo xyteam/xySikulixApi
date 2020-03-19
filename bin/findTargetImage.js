@@ -77,17 +77,14 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
           var clickRegion = new Region(returnArray[i].location.x, returnArray[i].location.y, returnArray[i].dimension.width, returnArray[i].dimension.height);
           switch (imageAction) {
             case 'single':
-              clickRegion.hoverSync();
               clickRegion.clickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'double':
-              clickRegion.hoverSync();
               clickRegion.doubleClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'right':
-              clickRegion.hoverSync();
               clickRegion.rightClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
