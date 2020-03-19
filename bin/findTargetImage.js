@@ -13,6 +13,8 @@ const Region = xysikulixapi.Region;
 const Screen = xysikulixapi.Screen;
 const Pattern = xysikulixapi.Pattern;
 const Settings = xysikulixapi.Settings;
+const Mouse = xysikulixapi.Mouse;
+const Button = xysikulixapi.Button;
 
 const argv = require('minimist')(process.argv.slice(2));
 const imagePath = (argv.imagePath != null && argv.imagePath != 'undefined') ? argv.imagePath : 'Screen';
@@ -79,19 +81,26 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
           var mySettings = new Settings();
           switch (imageAction) {
             case 'single':
+            case 'click':
+              mySettings.ClickDelay = 0;
+              clickRegion.clickSync();
+              returnArray[i].clicked = returnArray[i].center;
+            break;
+            case 'hoverClick':
               clickRegion.hoverSync();
-              mySettings.ClickDelay = 0.05;
+              mySettings.ClickDelay = 0;
               clickRegion.clickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'double':
-              clickRegion.hoverSync();
+            case 'doubleClick':
+              mySettings.ClickDelay = 0;
               clickRegion.doubleClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'right':
-              clickRegion.hoverSync();
-              mySettings.ClickDelay = 0.05;
+            case 'rightClick':
+              mySettings.ClickDelay = 0;
               clickRegion.rightClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
