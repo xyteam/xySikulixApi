@@ -81,39 +81,41 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
           var clickRegion = new Region(returnArray[i].location.x, returnArray[i].location.y, returnArray[i].dimension.width, returnArray[i].dimension.height);
           var mySettings = new Settings();
           mySettings.ClickDelay = 0;
+          clickRegion.mouseUpSync();
           switch (imageAction) {
             case 'single':
             case 'click':
               if (process.env.DISPLAY.split(':')[1] < 9) {
-                clickRegion.click();
+                clickRegion.clickSync();
               } else {
-                clickRegion.doubleClick();
+                clickRegion.doubleClickSync();
               }
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'hoverClick':
               clickRegion.hoverSync();
               if (process.env.DISPLAY.split(':')[1] < 9) {
-                clickRegion.click();
+                clickRegion.clickSync();
               } else {
-                clickRegion.doubleClick();
+                clickRegion.doubleClickSync();
               }
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'double':
             case 'doubleClick':
-              clickRegion.doubleClick();
+              clickRegion.doubleClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'right':
             case 'rightClick':
-              clickRegion.rightClick();
+              clickRegion.rightClickSync();
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'hover':
               clickRegion.hoverSync();
             break;
           }
+          clickRegion.mouseUpSync();
         }  
       }
     }
