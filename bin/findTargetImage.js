@@ -85,19 +85,19 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
           switch (imageAction) {
             case 'single':
             case 'click':
-              if (process.env.DISPLAY.split(':')[1] < 9) {
-                clickRegion.clickSync();
-              } else {
+              if (process.env.DISPLAY.split(':')[1] > 9) {
                 clickRegion.doubleClickSync();
+              } else {
+                clickRegion.clickSync();
               }
               returnArray[i].clicked = returnArray[i].center;
             break;
             case 'hoverClick':
               clickRegion.hoverSync();
-              if (process.env.DISPLAY.split(':')[1] < 9) {
-                clickRegion.clickSync();
-              } else {
+              if (process.env.DISPLAY.split(':')[1] > 9) {
                 clickRegion.doubleClickSync();
+              } else {
+                clickRegion.clickSync();
               }
               returnArray[i].clicked = returnArray[i].center;
             break;
