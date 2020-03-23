@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 
+//use our own xysikulixapi
+const xysikulixapi = require('../lib/xysikulixapi');
+
 // Tesseract-OCR Property
 process.env.LC_ALL = 'C';
 process.env.LC_CTYPE = 'C';
 process.env.TESSDATA_PREFIX = process.env.TESSDATA_PREFIX || '/usr/share/tesseract-ocr/4.00/tessdata';
 process.env.OMP_THREAD_LIMIT = process.env.OMP_THREAD_LIMIT || 1;
 
+// java
 const java = require('java');
 java.options.push('-Xms128m');
 java.options.push('-Xmx512m');
-const xysikulixapi = require('../lib/xysikulixapi');
 
 // Sikuli Property
 const App = xysikulixapi.App;
