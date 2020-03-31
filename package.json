@@ -15,8 +15,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "postinstall": "bin/downloadSikulixApiJar.js",
-    "download": "bin/downloadSikulixApiJar.js",
+    "postinstall": "node bin/downloadSikulixApiJar.js",
+    "download": "node bin/downloadSikulixApiJar.js",
     "up-target": "google-chrome --no-first-run `pwd`/test_images/targetImage.png > /dev/null 2>&1 &",
     "down-target": "pkill -f 'google-chrome --no-first-run .*/test_images/targetImage.png'",
     "test-positive": "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --textHint='Databases' | grep UTC",
