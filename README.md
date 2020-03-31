@@ -12,7 +12,7 @@ This project contains node js code that can make Sikulx API functionality availa
 
 #### Installation Notes
 ```
-npm install xysikulixapi                          # which will download sikulixapi-2.0.1.jar
+npm install xysikulixapi                          # which will download sikulixapi-2.0.4.jar
 SikulixApiVer=2.0.3 npm install xysikulixapi      # which will download sikulixapi-2.0.3.jar
 ```
 
