@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-// prepare for safeQuote
+// change path to your project
 const safeQuote = require('../lib/safequote');
+const xysikulixapi = require('../lib/xysikulixapi');
 
 // all external env vars should be parsed or quoted to const
 process.env.imageSimilarity = parseFloat(process.env.imageSimilarity) || 0.8;
@@ -31,7 +32,6 @@ const notFoundStatus = {status: 'notFound'};
 const java = require('java');
 java.options.push('-Xms128m');
 java.options.push('-Xmx512m');
-const xysikulixapi = require('../lib/xysikulixapi');
 
 // Sikuli Property
 const App = xysikulixapi.App;
