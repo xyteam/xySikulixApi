@@ -8,9 +8,6 @@ if (process.env.NODE_ENV !== 'production') {
 const safeQuote = require('../lib/safequote');
 
 // all external env vars should be parsed or quoted
-if (process.env.DISPLAY) { // windows does not have a DISPLAY environment variable
-  process.env.DISPLAY = ':' +  parseInt(process.env.DISPLAY.split(':')[1]) || ':1'
-}
 const SikulixApiVer = safeQuote(process.env.SikulixApiVer);
 
 const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
