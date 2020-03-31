@@ -18,7 +18,6 @@ SikulixApiVer=2.0.3 npm install xysikulixapi      # which will download sikulixa
 
 #### test out
 ```
-google-chrome test_images/targetImage.png &
 npm test
 
 or
