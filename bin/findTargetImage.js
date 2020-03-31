@@ -29,8 +29,9 @@ const notFoundStatus = {status: 'notFound'};
 
 // require stuff
 const java = require('java');
-const xysikulixapi = require('../lib/xysikulixapi')
-// const xysikulixapi = require('xysikulixapi');
+java.options.push('-Xms128m');
+java.options.push('-Xmx512m');
+const xysikulixapi = require('../lib/xysikulixapi');
 
 // Sikuli Property
 const App = xysikulixapi.App;
