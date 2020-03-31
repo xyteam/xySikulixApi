@@ -3,15 +3,16 @@
 // prepare for safeQuote
 const safeQuote = require('../lib/safequote');
 
-// all external env vars should be parsed or quoted
+// all external env vars should be parsed or quoted to const
 process.env.imageSimilarity = parseFloat(process.env.imageSimilarity) || 0.8;
 process.env.imageWaitTime = parseInt(process.env.imageWaitTime) || 1;
 process.env.TESSDATA_PREFIX = safeQuote(process.env.TESSDATA_PREFIX) || '/usr/share/tesseract-ocr/4.00/tessdata';
 process.env.OMP_THREAD_LIMIT = parseInt(process.env.OMP_THREAD_LIMIT) || 1;
+const myDISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
+
 // needed for Tesseract-OCR property
 process.env.LC_ALL = 'C';
 process.env.LC_CTYPE = 'C';
-const myDISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
 
 // all args should be parsed or quoted to const
 const argv = require('minimist')(process.argv.slice(2));
