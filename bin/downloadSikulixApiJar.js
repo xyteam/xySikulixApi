@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 // prepare for safeQuote
-const quote = require('shell-quote').quote;
-const parse = require('shell-quote').parse;
-const safeQuote = (str) => { return (str) ? quote(parse(str)) : undefined };
+const safeQuote = require('../lib/safequote');
 
 // all external env vars should be parsed or quoted
 process.env.DISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
-const SikulixApiVer = safeQuote(process.env.SikulixApiVer) || '2.0.4';
+const SikulixApiVer = safeQuote(process.env.SikulixApiVer);
 
 const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
 const sikuliApiLibPath = `${__dirname}/../lib`;

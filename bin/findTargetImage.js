@@ -20,10 +20,8 @@ const xysikulixapi = require('../lib/xysikulixapi')
 // installed xysikulixapi
 // const xysikulixapi = require('xysikulixapi');
 
-// java
-const java = require('java');
-java.options.push('-Xms128m');
-java.options.push('-Xmx512m');
+// prepare for safeQuote
+const safeQuote = require('../lib/safequote');
 
 // Sikuli Property
 const App = xysikulixapi.App;
