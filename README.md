@@ -12,18 +12,22 @@ This project contains node js code that can make Sikulx API functionality availa
 
 #### Installation Notes
 ```
-npm install xysikulixapi                          # which will download sikulixapi-2.0.1.jar
+npm install xysikulixapi                          # which will download sikulixapi-2.0.4.jar
 SikulixApiVer=2.0.3 npm install xysikulixapi      # which will download sikulixapi-2.0.3.jar
 ```
 
 #### test out
 ```
-google-chrome test_images/targetImage.png &
 npm test
 
 or
+
+google-chrome test_images/targetImage.png &
+
 npm run test-positive
 npm run test-negative
+
+kill %1
 ```
 
 #### development note
