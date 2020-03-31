@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 
-process.env.DISPLAY = process.env.DISPLAY || ':1';
-const SikulixApiVer = process.env.SikulixApiVer || '2.0.4';
+// prepare for safeQuote
+const quote = require('shell-quote').quote;
+const parse = require('shell-quote').parse;
+const safeQuote = (str) => { return (str) ? quote(parse(str)) : undefined };
+
+// all external env vars should be parsed or quoted
+process.env.DISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
+const SikulixApiVer = safeQuote(process.env.SikulixApiVer) || '2.0.4';
+
 const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
 const sikuliApiLibPath = `${__dirname}/../lib`;
 const sikuliApiJarPath = `${sikuliApiLibPath}/${sikuliApiJar}`
