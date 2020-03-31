@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
 // prepare for safeQuote
-const quote = require('shell-quote').quote;
-const parse = require('shell-quote').parse;
-const safeQuote = (str) => { return (str) ? quote(parse(str)) : undefined };
+const safeQuote = require('../lib/safequote');
 
 // all external env vars should be parsed or quoted
 process.env.imageSimilarity = parseFloat(process.env.imageSimilarity) || 0.8;
@@ -15,26 +13,7 @@ process.env.LC_ALL = 'C';
 process.env.LC_CTYPE = 'C';
 const myDISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
 
-//use our own xysikulixapi
-const xysikulixapi = require('../lib/xysikulixapi')
-// installed xysikulixapi
-// const xysikulixapi = require('xysikulixapi');
-
-// prepare for safeQuote
-const safeQuote = require('../lib/safequote');
-
-// Sikuli Property
-const App = xysikulixapi.App;
-const Button = xysikulixapi.Button;
-const Mouse = xysikulixapi.Mouse;
-const OCR = xysikulixapi.OCR;
-const Pattern = xysikulixapi.Pattern;
-const Region = xysikulixapi.Region;
-const Settings = xysikulixapi.Settings;
-const Screen = xysikulixapi.Screen;
-OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
-
-// process pargs
+// all args should be parsed or quoted to const
 const argv = require('minimist')(process.argv.slice(2));
 const imagePath = safeQuote((argv.imagePath != null && argv.imagePath != 'undefined') ? argv.imagePath : 'Screen');
 const imageSimilarity = parseFloat((argv.imageSimilarity != null && argv.imageSimilarity != 'undefined') ? argv.imageSimilarity : process.env.imageSimilarity || 0.8);
@@ -46,6 +25,22 @@ const imageMaxCount = parseInt((argv.imageMaxCount != null && argv.imageMaxCount
 
 // default output
 const notFoundStatus = {status: 'notFound'};
+
+// require stuff
+const java = require('java');
+const xysikulixapi = require('../lib/xysikulixapi')
+// const xysikulixapi = require('xysikulixapi');
+
+// Sikuli Property
+const App = xysikulixapi.App;
+const Button = xysikulixapi.Button;
+const Mouse = xysikulixapi.Mouse;
+const OCR = xysikulixapi.OCR;
+const Pattern = xysikulixapi.Pattern;
+const Region = xysikulixapi.Region;
+const Settings = xysikulixapi.Settings;
+const Screen = xysikulixapi.Screen;
+OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
 
 // defind findImage function
 const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, imageAction, imageMaxCount) => {
