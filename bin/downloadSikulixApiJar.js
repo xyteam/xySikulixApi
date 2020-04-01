@@ -24,7 +24,7 @@ const findJarStat = (filePath, getUrl) => {
       const options = {
         url: getUrl,
         encoding: null
-      }
+      };
       await request.get(options, (err, res, body) => {
         console.log('statusCode:', res.statusCode);
         console.log('headers:', res.headers);
@@ -38,7 +38,7 @@ const findJarStat = (filePath, getUrl) => {
       });
     }
   });
-}
+};
 
 findJarStat(sikuliApiJarPath, sikuliApiUrl).then(() => {
   try {
@@ -48,5 +48,5 @@ findJarStat(sikuliApiJarPath, sikuliApiUrl).then(() => {
     console.log('run \'SikulixApiVer=2.0.x npm run download\' to download different versions');
   } catch(e) {
     console.log(sikuliApiJarPath + ' jar file error: ' + e);
-  }  
+  }
 }, () => console.log('download failed: ' + sikuliApiUrl));

@@ -14,12 +14,12 @@
   },
   "devDependencies": {},
   "scripts": {
-    "postinstall": "bin/downloadSikulixApiJar.js",
-    "download": "bin/downloadSikulixApiJar.js",
+    "postinstall": "node bin/downloadSikulixApiJar.js",
+    "download": "node bin/downloadSikulixApiJar.js",
     "up-target": "google-chrome --no-first-run `pwd`/test_images/targetImage.png > /dev/null 2>&1 &",
     "down-target": "pkill -f 'google-chrome --no-first-run .*/test_images/targetImage.png'",
-    "test-positive": "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --textHint='Databases' | grep UTC",
-    "test-negative": "bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --textHint='Fake' | grep notFound",
+    "test-positive": "node bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --textHint='Databases' | grep UTC",
+    "test-negative": "node bin/findTargetImage.js --onArea=onScreen --imagePath=`pwd`/test_images/sampleImage.png --textHint='Fake' | grep notFound",
     "test": "npm run up-target && npm run test-positive && npm run test-negative && npm run down-target"
   },
   "author": "xywang68@gmail.com",
