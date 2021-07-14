@@ -1,14 +1,14 @@
 {
   "name": "xysikulixapi",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "bin": {
     "findTargetImage": "bin/findTargetImage.js"
   },
   "main": "lib/xysikulixapi.js",
   "dependencies": {
-    "java": "^0.12.1",
-    "minimist": "^1.2.0",
+    "java": "^0.12.2",
+    "minimist": "^1.2.5",
     "request": "^2.88.0",
     "shell-quote": "^1.7.2"
   },
