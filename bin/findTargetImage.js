@@ -142,11 +142,13 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
   } catch(e) {
     console.log(e);
     returnArray.push(notFoundStatus);
+  } finally {
+    return JSON.stringify(returnArray);
   }
-  return JSON.stringify(returnArray);
 };
 
 // call findImage function
 const target_result = findImage(imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, imageAction, imageMaxCount);
 // display result to stdout
 console.log(`target_result: ${target_result}`);
+process.exit();
