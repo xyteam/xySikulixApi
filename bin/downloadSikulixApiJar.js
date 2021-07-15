@@ -4,7 +4,7 @@
 const safeQuote = require('../lib/safequote');
 
 // all external env vars should be parsed or quoted
-const SikulixApiVer = safeQuote(process.env.SikulixApiVer) || '2.0.5';
+const SikulixApiVer = safeQuote(process.env.SikulixApiVer) || '2.0.4';
 
 const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
 const sikuliApiLibPath = `${__dirname}/../lib`;
