@@ -1,6 +1,6 @@
 {
   "name": "xysikulixapi",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "",
   "bin": {
     "findTargetImage": "bin/findTargetImage.js"
@@ -9,10 +9,10 @@
   "dependencies": {
     "java": "^0.12.2",
     "minimist": "^1.2.5",
+    "node-gyp": "^8.4.1",
     "request": "^2.88.0",
-    "shell-quote": "^1.7.2"
+    "shell-quote": "^1.7.3"
   },
-  "devDependencies": {},
   "scripts": {
     "postinstall": "node bin/downloadSikulixApiJar.js",
     "download": "node bin/downloadSikulixApiJar.js",
