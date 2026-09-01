@@ -18,9 +18,10 @@ const { execSync } = require('child_process');
 // Central (only the thin jar is, which lacks the native deps). It is built from the
 // Oculix source tree. This script obtains it by:
 //   1. reuse an existing jar in lib/
-//   2. copy from a sibling Oculix checkout's build output (API/target/)
-//   3. build it from the sibling Oculix checkout with maven (if mvn is available)
-//   4. fail with a clear message
+//   2. copy from a pre-built jar path given via OCULIX_JAR=/path/to/jar
+//   3. copy from a sibling Oculix checkout's build output (API/target/)
+//   4. build it from the sibling Oculix checkout with maven (if mvn is available)
+//   5. fail with a clear message
 //
 // Oculix source location can be overridden with OCULIX_SRC=/path/to/Oculix.
 
@@ -69,7 +70,13 @@ function buildFromSource(src) {
     console.log(`[oculix] ${oculixApiJar} already present`);
     process.exit(0);
   }
-  // 2 & 3. from Oculix source (copy or build)
+  // 2. pre-built jar path
+  if (process.env.OCULIX_JAR && jarUsable(process.env.OCULIX_JAR)) {
+    fs.copyFileSync(process.env.OCULIX_JAR, oculixApiJarPath);
+    console.log(`[oculix] installed ${oculixApiJar} from OCULIX_JAR`);
+    process.exit(0);
+  }
+  // 3 & 4. from Oculix source (copy or build)
   const src = findOculixSrc();
   let obtained = null;
   if (src) {
@@ -85,7 +92,7 @@ function buildFromSource(src) {
       process.exit(0);
     }
   }
-  // 4. fail clearly
+  // 5. fail clearly
   console.error(
     `[oculix] FATAL: could not obtain ${oculixApiJar}.\n` +
     `The Oculix fat jar is built from source (https://github.com/oculix-org/Oculix); it is\n` +
