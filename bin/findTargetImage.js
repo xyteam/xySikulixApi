@@ -7,7 +7,11 @@ const xysikulixapi = require('../lib/xysikulixapi');
 // all external env vars should be parsed or quoted to const
 process.env.imageSimilarity = parseFloat(process.env.imageSimilarity) || 0.8;
 process.env.imageWaitTime = parseInt(process.env.imageWaitTime) || 1;
-process.env.TESSDATA_PREFIX = safeQuote(process.env.TESSDATA_PREFIX) || '/usr/share/tesseract-ocr/4.00/tessdata';
+// If TESSDATA_PREFIX points at a missing dir (e.g. the old system tesseract path
+// removed in the Oculix-era image), leave it unset so Oculix uses its bundled
+// tessdata (extracted from the jar). Only force dataPath when the dir actually exists.
+const tessdataDir = safeQuote(process.env.TESSDATA_PREFIX) || '/usr/share/tesseract-ocr/4.00/tessdata';
+process.env.TESSDATA_PREFIX = require('fs').existsSync(tessdataDir) ? tessdataDir : undefined;
 process.env.OMP_THREAD_LIMIT = parseInt(process.env.OMP_THREAD_LIMIT) || 1;
 const myDISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
 
@@ -37,7 +41,9 @@ const Pattern = xysikulixapi.Pattern;
 const Region = xysikulixapi.Region;
 const Settings = xysikulixapi.Settings;
 const Screen = xysikulixapi.Screen;
-OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
+if (process.env.TESSDATA_PREFIX) {
+  OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
+}
 
 // defind findImage function
 const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, imageAction, imageMaxCount) => {
