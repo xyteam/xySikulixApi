@@ -28,12 +28,7 @@ const imageMaxCount = parseInt((argv.imageMaxCount != null && argv.imageMaxCount
 // default output
 const notFoundStatus = {status: 'notFound'};
 
-// require stuff
-const java = require('java');
-java.options.push('-Xms128m');
-java.options.push('-Xmx512m');
-
-// Sikuli Property
+// Sikuli Property (imports loaded via lib/xysikulixapi.js -> java-bridge + Oculix)
 const App = xysikulixapi.App;
 const Button = xysikulixapi.Button;
 const Mouse = xysikulixapi.Mouse;
@@ -57,7 +52,7 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
   const myImageMaxCount = parseInt(imageMaxCount || 1);
 
   const findRegion = new Screen();
-  findRegion.setAutoWaitTimeout(java.newFloat(myImageWaitTime));
+  findRegion.setAutoWaitTimeout(myImageWaitTime);
 
   try {
     var oneTarget;
@@ -71,13 +66,13 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
     }
     if (myImagePath.includes('Screen')) {
       const screenMargin = myImagePath.includes('-') ? parseInt(myImagePath.split('-')[1]) : 1;
-      oneTarget = Region(findRegion.getBoundsSync()).growSync(-screenMargin);
+      oneTarget = (new Region(findRegion.getBoundsSync())).growSync(-screenMargin);
       returnItem.text = oneTarget.textSync().split('\n');
       [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(oneTarget);
       oneTarget.highlight(0.1);
       returnArray.push(returnItem);
     } else {
-      const oneSample = (new Pattern(myImagePath)).similarSync(java.newFloat(myImageSimilarity));
+      const oneSample = (new Pattern(myImagePath)).similarSync(myImageSimilarity);
       const findTargets = findRegion.findAllSync(oneSample);
       const myRegex = new RegExp(myTextHint, 'i');
       var matchCount = 0;
