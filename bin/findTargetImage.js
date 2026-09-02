@@ -66,8 +66,11 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
     var returnArray = [];
     const fillRectangleInfo = (rectItem) => {
       location = {x: rectItem.x, y: rectItem.y};
-      dimension = {width: rectItem.w, height: rectItem.h};
-      center = {x: rectItem.x + Math.round(rectItem.w / 2), y: rectItem.y + Math.round(rectItem.h / 2)};
+            // Oculix Region/Match exposes x/y/width/height (java-bridge proxies the getters)
+      const rw = (rectItem.width !== undefined) ? rectItem.width : rectItem.w;
+      const rh = (rectItem.height !== undefined) ? rectItem.height : rectItem.h;
+      dimension = {width: rw, height: rh};
+      center = {x: rectItem.x + Math.round(rw / 2), y: rectItem.y + Math.round(rh / 2)};
       return [location, dimension, center];
     }
     if (myImagePath.includes('Screen')) {
@@ -86,7 +89,7 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
         const oneMatch = findTargets.nextSync();
         returnItem.score = Math.floor(oneMatch.getScoreSync()*1000000)/1000000;
         [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(oneMatch);
-        oneTarget = Region(oneMatch);
+                oneTarget = new Region(oneMatch);
         returnItem.text = oneTarget.textSync().split('\n');
         if (returnItem.score >= myImageSimilarity && returnItem.score <= myMaxSim && returnItem.text.join('\n').match(myRegex)) {
           matchCount += 1;
