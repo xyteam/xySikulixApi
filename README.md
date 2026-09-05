@@ -1,5 +1,19 @@
 ## xySikulixApi: Sikulix API for Linux and Node JS
 
+> ## ⚠️ MERGED INTO AutoBDD — DEVELOPMENT STOPPED HERE
+>
+> xySikulixApi has been **folded into [AutoBDD](https://github.com/xyteam/AutoBDD)** as
+> an internal library (the screen bridge consumed by AutoBDD's screen/image/OCR steps).
+> The four-repo structure (AutoBDD + AutoBDD-example + autobdd-test + xySikulixApi) was
+> consolidated into a single AutoBDD monorepo (phase-1); the xySikulixApi source now lives
+> under `AutoBDD/third_party/xysikulixapi/`.
+>
+> **No further development happens in this repo.** Changes to the Sikuli/Oculix screen
+> bridge should be made in the AutoBDD repo instead. This repo is kept read-only for
+> historical reference.
+>
+> **Reference:** https://github.com/xyteam/AutoBDD
+
 #### Disclaimer
 * All rights of Sikulix and its API belong to the original product providers. Pleaes visit http://sikulix.com/ for more details.
 * Codes in project will trigger the downloads of certain Sikulix JAR files through Sikulix provided links.
