@@ -7,7 +7,11 @@ const xysikulixapi = require('../lib/xysikulixapi');
 // all external env vars should be parsed or quoted to const
 process.env.imageSimilarity = parseFloat(process.env.imageSimilarity) || 0.8;
 process.env.imageWaitTime = parseInt(process.env.imageWaitTime) || 1;
-process.env.TESSDATA_PREFIX = safeQuote(process.env.TESSDATA_PREFIX) || '/usr/share/tesseract-ocr/4.00/tessdata';
+// If TESSDATA_PREFIX points at a missing dir (e.g. the old system tesseract path
+// removed in the Oculix-era image), leave it unset so Oculix uses its bundled
+// tessdata (extracted from the jar). Only force dataPath when the dir actually exists.
+const tessdataDir = safeQuote(process.env.TESSDATA_PREFIX) || '/usr/share/tesseract-ocr/4.00/tessdata';
+process.env.TESSDATA_PREFIX = require('fs').existsSync(tessdataDir) ? tessdataDir : undefined;
 process.env.OMP_THREAD_LIMIT = parseInt(process.env.OMP_THREAD_LIMIT) || 1;
 const myDISPLAY = ':' + parseInt(process.env.DISPLAY.split(':')[1]) || ':1';
 
@@ -28,12 +32,7 @@ const imageMaxCount = parseInt((argv.imageMaxCount != null && argv.imageMaxCount
 // default output
 const notFoundStatus = {status: 'notFound'};
 
-// require stuff
-const java = require('java');
-java.options.push('-Xms128m');
-java.options.push('-Xmx512m');
-
-// Sikuli Property
+// Sikuli Property (imports loaded via lib/xysikulixapi.js -> java-bridge + Oculix)
 const App = xysikulixapi.App;
 const Button = xysikulixapi.Button;
 const Mouse = xysikulixapi.Mouse;
@@ -42,7 +41,9 @@ const Pattern = xysikulixapi.Pattern;
 const Region = xysikulixapi.Region;
 const Settings = xysikulixapi.Settings;
 const Screen = xysikulixapi.Screen;
-OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
+if (process.env.TESSDATA_PREFIX) {
+  OCR.globalOptionsSync().dataPath(process.env.TESSDATA_PREFIX);
+}
 
 // defind findImage function
 const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, imageAction, imageMaxCount) => {
@@ -57,7 +58,7 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
   const myImageMaxCount = parseInt(imageMaxCount || 1);
 
   const findRegion = new Screen();
-  findRegion.setAutoWaitTimeout(java.newFloat(myImageWaitTime));
+  findRegion.setAutoWaitTimeout(myImageWaitTime);
 
   try {
     var oneTarget;
@@ -65,19 +66,22 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
     var returnArray = [];
     const fillRectangleInfo = (rectItem) => {
       location = {x: rectItem.x, y: rectItem.y};
-      dimension = {width: rectItem.w, height: rectItem.h};
-      center = {x: rectItem.x + Math.round(rectItem.w / 2), y: rectItem.y + Math.round(rectItem.h / 2)};
+            // Oculix Region/Match exposes x/y/width/height (java-bridge proxies the getters)
+      const rw = (rectItem.width !== undefined) ? rectItem.width : rectItem.w;
+      const rh = (rectItem.height !== undefined) ? rectItem.height : rectItem.h;
+      dimension = {width: rw, height: rh};
+      center = {x: rectItem.x + Math.round(rw / 2), y: rectItem.y + Math.round(rh / 2)};
       return [location, dimension, center];
     }
     if (myImagePath.includes('Screen')) {
       const screenMargin = myImagePath.includes('-') ? parseInt(myImagePath.split('-')[1]) : 1;
-      oneTarget = Region(findRegion.getBoundsSync()).growSync(-screenMargin);
+      oneTarget = (new Region(findRegion.getBoundsSync())).growSync(-screenMargin);
       returnItem.text = oneTarget.textSync().split('\n');
       [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(oneTarget);
       oneTarget.highlight(0.1);
       returnArray.push(returnItem);
     } else {
-      const oneSample = (new Pattern(myImagePath)).similarSync(java.newFloat(myImageSimilarity));
+      const oneSample = (new Pattern(myImagePath)).similarSync(myImageSimilarity);
       const findTargets = findRegion.findAllSync(oneSample);
       const myRegex = new RegExp(myTextHint, 'i');
       var matchCount = 0;
@@ -85,7 +89,7 @@ const findImage = (imagePath, imageSimilarity, maxSim, textHint, imageWaitTime, 
         const oneMatch = findTargets.nextSync();
         returnItem.score = Math.floor(oneMatch.getScoreSync()*1000000)/1000000;
         [returnItem.location, returnItem.dimension, returnItem.center] = fillRectangleInfo(oneMatch);
-        oneTarget = Region(oneMatch);
+                oneTarget = new Region(oneMatch);
         returnItem.text = oneTarget.textSync().split('\n');
         if (returnItem.score >= myImageSimilarity && returnItem.score <= myMaxSim && returnItem.text.join('\n').match(myRegex)) {
           matchCount += 1;

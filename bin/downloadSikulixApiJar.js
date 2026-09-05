@@ -3,53 +3,101 @@
 // prepare for safeQuote
 const safeQuote = require('../lib/safequote');
 
-// all external env vars should be parsed or quoted
-const SikulixApiVer = safeQuote(process.env.SikulixApiVer) || '2.0.4';
+// Oculix fat jar selection (env override for testing/alternate versions)
+const OculixApiVer = safeQuote(process.env.OculixApiVer) || '4.0.0';
 
-const sikuliApiJar = `sikulixapi-${SikulixApiVer}.jar`;
-const sikuliApiLibPath = `${__dirname}/../lib`;
-const sikuliApiJarPath = `${sikuliApiLibPath}/${sikuliApiJar}`
-const sikuliApiUrl = `https://launchpad.net/sikuli/sikulix/${SikulixApiVer}/+download/${sikuliApiJar}`;
+const oculixApiJar = `oculixapi-${OculixApiVer}-complete-lux.jar`;
+const oculixApiLibPath = `${__dirname}/../lib`;
+const oculixApiJarPath = `${oculixApiLibPath}/${oculixApiJar}`;
 
 const fs = require('fs');
-const request = require('request');
-const java = require('java');
+const path = require('path');
+const { execSync } = require('child_process');
 
-const findJarStat = (filePath, getUrl) => {
-  return new Promise(async (resolve, reject) => {
-    if (!fs.existsSync(sikuliApiLibPath)) fs.mkdirSync(sikuliApiLibPath);
-    if (fs.existsSync(filePath) && fs.statSync(filePath).size > 10000) {
-      resolve(true);
-    } else {
-      const options = {
-        url: getUrl,
-        encoding: null
-      };
-      await request.get(options, (err, res, body) => {
-        console.log('statusCode:', res.statusCode);
-        console.log('headers:', res.headers);
-        try {
-          fs.writeFileSync(filePath, Buffer.from(body, 'utf8'));
-          resolve(true);
-        } catch(e) {
-          console.log(e);
-          reject(false);
-        } finally {}
-      });
-    }
-  });
-};
+// The Oculix fat jar (bundles OpenCV + Tesseract natives) is NOT published to Maven
+// Central (only the thin jar is, which lacks the native deps). It is built from the
+// Oculix source tree. This script obtains it by:
+//   1. reuse an existing jar in lib/
+//   2. copy from a pre-built jar path given via OCULIX_JAR=/path/to/jar
+//   3. copy from a sibling Oculix checkout's build output (API/target/)
+//   4. build it from the sibling Oculix checkout with maven (if mvn is available)
+//   5. fail with a clear message
+//
+// Oculix source location can be overridden with OCULIX_SRC=/path/to/Oculix.
 
-findJarStat(sikuliApiJarPath, sikuliApiUrl).then(() => {
-  try {
-    java.classpath.push(sikuliApiJarPath);
-    const Screen = java.import('org.sikuli.script.Screen');
-    console.log(sikuliApiJarPath + ' jar file is good');
-    console.log('run \'SikulixApiVer=2.0.x npm run download\' to download different versions');
-  } catch(e) {
-    console.log(sikuliApiJarPath + ' jar file error: ' + e);
-  } finally {
-    console.log('exit');
-    process.exit();
+function ensureLib() {
+  if (!fs.existsSync(oculixApiLibPath)) fs.mkdirSync(oculixApiLibPath, { recursive: true });
+}
+
+function jarUsable(filePath) {
+  return fs.existsSync(filePath) && fs.statSync(filePath).size > 10000;
+}
+
+// locate the Oculix source tree (sibling of this repo by default)
+function findOculixSrc() {
+  const env = process.env.OCULIX_SRC;
+  if (env) return env;
+  const here = path.resolve(__dirname, '..');
+  const candidates = [
+    path.join(here, '..', 'Oculix'),
+    path.join(here, '..', '..', 'Oculix'),
+    path.join(here, '..', '..', 'oculix'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(path.join(c, 'API', 'pom.xml'))) return c;
   }
-}, () => console.log('download failed: ' + sikuliApiUrl));
+  return null;
+}
+
+function buildFromSource(src) {
+  const apiDir = path.join(src, 'API');
+  const outJar = path.join(apiDir, 'target', oculixApiJar);
+  if (jarUsable(outJar)) return outJar;
+  // maven may not be on PATH inside docker; if absent, fail with instructions
+  let mvn = 'mvn';
+  try { execSync('mvn -v', { stdio: 'ignore' }); } catch (e) { return null; }
+  console.log(`[oculix] building Oculix fat jar from ${apiDir} ...`);
+  execSync(`${mvn} -f "${apiDir}/pom.xml" -Pcomplete-lux-jar -DskipTests clean package`, {
+    stdio: 'inherit'
+  });
+  return jarUsable(outJar) ? outJar : null;
+}
+
+(async () => {
+  ensureLib();
+  // 1. existing jar
+  if (jarUsable(oculixApiJarPath)) {
+    console.log(`[oculix] ${oculixApiJar} already present`);
+    process.exit(0);
+  }
+  // 2. pre-built jar path
+  if (process.env.OCULIX_JAR && jarUsable(process.env.OCULIX_JAR)) {
+    fs.copyFileSync(process.env.OCULIX_JAR, oculixApiJarPath);
+    console.log(`[oculix] installed ${oculixApiJar} from OCULIX_JAR`);
+    process.exit(0);
+  }
+  // 3 & 4. from Oculix source (copy or build)
+  const src = findOculixSrc();
+  let obtained = null;
+  if (src) {
+    const builtJar = path.join(src, 'API', 'target', oculixApiJar);
+    if (jarUsable(builtJar)) {
+      obtained = builtJar;
+    } else {
+      obtained = buildFromSource(src);
+    }
+    if (obtained) {
+      fs.copyFileSync(obtained, oculixApiJarPath);
+      console.log(`[oculix] installed ${oculixApiJar}`);
+      process.exit(0);
+    }
+  }
+  // 5. fail clearly
+  console.error(
+    `[oculix] FATAL: could not obtain ${oculixApiJar}.\n` +
+    `The Oculix fat jar is built from source (https://github.com/oculix-org/Oculix); it is\n` +
+    `not on Maven Central. Clone Oculix beside this repo (or set OCULIX_SRC) and ensure\n` +
+    `mvn is available, then re-run \`npm install\` (or \`npm run download\`).`
+  );
+  process.exit(1);
+})();
